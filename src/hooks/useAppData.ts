@@ -85,6 +85,30 @@ export function useAppData() {
     return workouts.filter(workout => workout.routineId === routineId);
   };
 
+  // Get last workout data for a specific exercise
+  const getLastWorkoutDataForExercise = (exerciseId: string, routineId: string) => {
+    // Get all workouts for this routine, sorted by date (most recent first)
+    const routineWorkouts = getWorkoutsByRoutine(routineId)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Find the most recent workout that contains this exercise
+    for (const workout of routineWorkouts) {
+      const exercise = workout.exercises.find(ex => ex.exerciseId === exerciseId);
+      if (exercise && exercise.sets.length > 0) {
+        // Return the first set data (assuming it's the most recent attempt)
+        const firstSet = exercise.sets[0];
+        return {
+          weight: firstSet.weight,
+          reps: firstSet.reps,
+          rir: firstSet.rir,
+          weightUnit: exercise.weightUnit
+        };
+      }
+    }
+    
+    return null;
+  };
+
   return {
     routines,
     workouts,
@@ -100,5 +124,6 @@ export function useAppData() {
     deleteWorkout,
     getWorkoutsByDateRange,
     getWorkoutsByRoutine,
+    getLastWorkoutDataForExercise,
   };
 }

@@ -82,6 +82,51 @@ export const exercises: Exercise[] = [
   { id: 'burpees', name: 'Burpees', category: 'Cardio', muscleGroups: ['Full Body'], equipment: 'Bodyweight' },
   { id: 'jump-rope', name: 'Jump Rope', category: 'Cardio', muscleGroups: ['Full Body'], equipment: 'Jump Rope' },
   { id: 'high-knees', name: 'High Knees', category: 'Cardio', muscleGroups: ['Legs'], equipment: 'Bodyweight' },
+
+  // PPL Routine Specific Exercises
+  // Chest - PUSH Day
+  { id: 'barbell-bench-press', name: 'Press Banca Barra', category: 'Chest', muscleGroups: ['Chest', 'Shoulders', 'Triceps'], equipment: 'Barbell' },
+  { id: 'incline-machine-press', name: 'Press Inclinado Máquina Discos', category: 'Chest', muscleGroups: ['Upper Chest', 'Shoulders', 'Triceps'], equipment: 'Machine' },
+  { id: 'pec-deck', name: 'Pec Deck', category: 'Chest', muscleGroups: ['Chest'], equipment: 'Machine' },
+  { id: 'incline-dumbbell-press', name: 'Press Inclinado Mancuernas', category: 'Chest', muscleGroups: ['Upper Chest', 'Shoulders', 'Triceps'], equipment: 'Dumbbells' },
+  { id: 'flat-machine-press', name: 'Press Plano Máquina', category: 'Chest', muscleGroups: ['Chest', 'Shoulders', 'Triceps'], equipment: 'Machine' },
+  { id: 'cable-flyes', name: 'Flies con Cable (Cruce)', category: 'Chest', muscleGroups: ['Chest'], equipment: 'Cable' },
+
+  // Shoulders - PUSH Day
+  { id: 'cable-lateral-raises', name: 'Elevaciones Laterales Cable (con muñequera)', category: 'Shoulders', muscleGroups: ['Side Delts'], equipment: 'Cable' },
+
+  // Triceps - PUSH Day
+  { id: 'tricep-pushdown-bar', name: 'Extensión Tríceps en Polea Barra Recta', category: 'Arms', muscleGroups: ['Triceps'], equipment: 'Cable' },
+  { id: 'overhead-tricep-extension-cable', name: 'Extensión Overhead Tríceps Cuerda', category: 'Arms', muscleGroups: ['Triceps'], equipment: 'Cable' },
+  { id: 'tricep-pushdown', name: 'Extensión Tríceps Barra Recta', category: 'Arms', muscleGroups: ['Triceps'], equipment: 'Cable' },
+  { id: 'unilateral-tricep-extension', name: 'Extensión Unilateral Tríceps Polea', category: 'Arms', muscleGroups: ['Triceps'], equipment: 'Cable' },
+
+  // Back - PULL Day
+  { id: 'wide-grip-pulldown', name: 'Jalón al Pecho Agarre Amplio', category: 'Back', muscleGroups: ['Lats', 'Biceps'], equipment: 'Cable' },
+  { id: 'seated-cable-row', name: 'Remo Sentado Polea', category: 'Back', muscleGroups: ['Back', 'Biceps'], equipment: 'Cable' },
+  { id: 'open-row-machine', name: 'Remo Abierto en Máquina', category: 'Back', muscleGroups: ['Upper Back', 'Rear Delts'], equipment: 'Machine' },
+  { id: 'reverse-pec-deck', name: 'Reverse Pec Deck', category: 'Back', muscleGroups: ['Rear Delts', 'Upper Back'], equipment: 'Machine' },
+  { id: 'assisted-pullups', name: 'Dominadas Asistidas', category: 'Back', muscleGroups: ['Lats', 'Biceps'], equipment: 'Machine' },
+  { id: 'neutral-grip-pulldown', name: 'Jalón Neutro', category: 'Back', muscleGroups: ['Lats', 'Biceps'], equipment: 'Cable' },
+  { id: 'close-grip-pulldown', name: 'Jalón al Pecho Cerrado', category: 'Back', muscleGroups: ['Lats', 'Biceps'], equipment: 'Cable' },
+  { id: 'machine-row', name: 'Remo en Máquina', category: 'Back', muscleGroups: ['Back', 'Biceps'], equipment: 'Machine' },
+  { id: 'face-pulls', name: 'Face Pull', category: 'Back', muscleGroups: ['Rear Delts', 'Upper Back'], equipment: 'Cable' },
+
+  // Biceps - PULL Day
+  { id: 'unilateral-preacher-curl', name: 'Curl Predicador Unilateral Mancuernas', category: 'Arms', muscleGroups: ['Biceps'], equipment: 'Dumbbells' },
+  { id: 'bayesian-curl', name: 'Curl Bayesian (Polea)', category: 'Arms', muscleGroups: ['Biceps'], equipment: 'Cable' },
+  { id: 'unilateral-preacher-curl-alt', name: 'Curl Predicador Unilateral', category: 'Arms', muscleGroups: ['Biceps'], equipment: 'Dumbbells' },
+  { id: 'hammer-curl', name: 'Curl Martillo Mancuernas', category: 'Arms', muscleGroups: ['Biceps', 'Forearms'], equipment: 'Dumbbells' },
+
+  // Legs - LEGS Day
+  { id: 'smith-squat', name: 'Sentadilla Smith Profunda', category: 'Legs', muscleGroups: ['Quads', 'Glutes'], equipment: 'Smith Machine' },
+  { id: 'romanian-deadlift', name: 'Peso Muerto Rumano', category: 'Legs', muscleGroups: ['Hamstrings', 'Glutes'], equipment: 'Barbell' },
+  { id: 'leg-press-45', name: 'Prensa 45°', category: 'Legs', muscleGroups: ['Quads', 'Glutes'], equipment: 'Machine' },
+  { id: 'leg-extension', name: 'Extensión de Cuádriceps', category: 'Legs', muscleGroups: ['Quads'], equipment: 'Machine' },
+  { id: 'leg-curl', name: 'Curl Femoral Tumbado/Sentado', category: 'Legs', muscleGroups: ['Hamstrings'], equipment: 'Machine' },
+  { id: 'hip-abduction', name: 'Abductores en Máquina', category: 'Legs', muscleGroups: ['Glutes', 'Hip Abductors'], equipment: 'Machine' },
+  { id: 'seated-calf-raises', name: 'Gemelos (Sentado)', category: 'Legs', muscleGroups: ['Calves'], equipment: 'Machine' },
+  { id: 'standing-calf-raises', name: 'Gemelos (De Pie)', category: 'Legs', muscleGroups: ['Calves'], equipment: 'Machine' },
 ];
 
 export const exerciseCategories = [

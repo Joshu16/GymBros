@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Pause, Square, Plus, Trash2, Check, X } from 'lucide-react';
 import { Routine, Workout, WorkoutExercise, ExerciseSet, WeightUnit } from '../types';
+import { useAppData } from '../hooks/useAppData';
 
 interface WorkoutViewProps {
   routine: Routine | undefined;
@@ -15,6 +16,7 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
   onCancel,
   defaultWeightUnit,
 }) => {
+  const { getLastWorkoutDataForExercise } = useAppData();
   const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isWorkoutActive, setIsWorkoutActive] = useState(false);
@@ -24,13 +26,33 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
   useEffect(() => {
     if (routine) {
       // Clone the routine exercises for the workout
-      const clonedExercises = routine.exercises.map(ex => ({
-        ...ex,
-        sets: ex.sets.map(set => ({ ...set }))
-      }));
+      const clonedExercises = routine.exercises.map(ex => {
+        // Get previous session data for this exercise
+        const lastWorkoutData = getLastWorkoutDataForExercise(ex.exerciseId, routine.id);
+        
+        // Clone the sets and populate the first set with previous data if available
+        const clonedSets = ex.sets.map((set, index) => {
+          if (index === 0 && lastWorkoutData) {
+            return {
+              ...set,
+              weight: lastWorkoutData.weight,
+              reps: lastWorkoutData.reps,
+              rir: lastWorkoutData.rir
+            };
+          }
+          return { ...set };
+        });
+        
+        return {
+          ...ex,
+          sets: clonedSets,
+          // Use the weight unit from the previous session if available
+          weightUnit: lastWorkoutData?.weightUnit || ex.weightUnit
+        };
+      });
       setWorkoutExercises(clonedExercises);
     }
-  }, [routine]);
+  }, [routine, getLastWorkoutDataForExercise]);
 
   const startWorkout = () => {
     setIsWorkoutActive(true);
@@ -186,13 +208,25 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
           <div className="current-exercise">
             <div className="exercise-header">
               <h3>{currentExercise.exercise.name}</h3>
-              <select
-                value={currentExercise.weightUnit}
-                onChange={(e) => updateWeightUnit(currentExercise.id, e.target.value as WeightUnit)}
-              >
-                <option value="kg">kg</option>
-                <option value="lbs">lbs</option>
-              </select>
+              <div className="exercise-header-controls">
+                {(() => {
+                  const lastWorkoutData = getLastWorkoutDataForExercise(currentExercise.exerciseId, routine.id);
+                  return lastWorkoutData ? (
+                    <div className="previous-session-indicator">
+                      <span className="previous-session-text">
+                        Última sesión: {lastWorkoutData.weight}{lastWorkoutData.weightUnit} × {lastWorkoutData.reps} (RIR: {lastWorkoutData.rir})
+                      </span>
+                    </div>
+                  ) : null;
+                })()}
+                <select
+                  value={currentExercise.weightUnit}
+                  onChange={(e) => updateWeightUnit(currentExercise.id, e.target.value as WeightUnit)}
+                >
+                  <option value="kg">kg</option>
+                  <option value="lbs">lbs</option>
+                </select>
+              </div>
             </div>
 
             <div className="sets-container">
