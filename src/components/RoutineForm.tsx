@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2, Save, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { Routine, WorkoutExercise, Exercise, ExerciseSet, WeightUnit } from '../types';
-import { exercises } from '../data/exercises';
+import { exercises, exerciseCategories } from '../data/exercises';
 
 interface RoutineFormProps {
   routine?: Routine | null;
