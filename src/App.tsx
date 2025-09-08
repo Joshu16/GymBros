@@ -6,15 +6,17 @@ import './App.css';
 // Import components
 import Header from './components/Header';
 import Navigation from './components/Navigation';
+import HomeView from './components/HomeView';
 import RoutinesView from './components/RoutinesView';
 import WorkoutView from './components/WorkoutView';
+import StatisticsView from './components/StatisticsView';
 import HistoryView from './components/HistoryView';
 import SettingsView from './components/SettingsView';
 
-type View = 'routines' | 'workout' | 'history' | 'settings';
+type View = 'home' | 'routines' | 'workout' | 'statistics' | 'history' | 'settings';
 
 function App() {
-  const [currentView, setCurrentView] = useState<View>('routines');
+  const [currentView, setCurrentView] = useState<View>('home');
   const [selectedRoutineId, setSelectedRoutineId] = useState<string | null>(null);
   
   const {
@@ -43,12 +45,21 @@ function App() {
 
   const handleWorkoutComplete = (workout: any) => {
     addWorkout(workout);
-    setCurrentView('routines');
+    setCurrentView('home');
     setSelectedRoutineId(null);
   };
 
   const renderCurrentView = () => {
     switch (currentView) {
+      case 'home':
+        return (
+          <HomeView
+            routines={routines}
+            workouts={workouts}
+            onStartWorkout={handleStartWorkout}
+            onNavigate={(view) => setCurrentView(view as View)}
+          />
+        );
       case 'routines':
         return (
           <RoutinesView
@@ -65,10 +76,17 @@ function App() {
             routine={routines.find(r => r.id === selectedRoutineId)}
             onComplete={handleWorkoutComplete}
             onCancel={() => {
-              setCurrentView('routines');
+              setCurrentView('home');
               setSelectedRoutineId(null);
             }}
             defaultWeightUnit={settings.defaultWeightUnit}
+          />
+        );
+      case 'statistics':
+        return (
+          <StatisticsView
+            workouts={workouts}
+            routines={routines}
           />
         );
       case 'history':
@@ -105,7 +123,7 @@ function App() {
       
       <Navigation 
         currentView={currentView}
-        onNavigate={setCurrentView}
+        onNavigate={(view) => setCurrentView(view as View)}
       />
     </div>
   );

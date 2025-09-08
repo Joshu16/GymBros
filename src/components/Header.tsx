@@ -10,10 +10,14 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ currentView, darkMode, onToggleDarkMode }) => {
   const getTitle = () => {
     switch (currentView) {
+      case 'home':
+        return 'Gym Bros';
       case 'routines':
         return 'Rutinas';
       case 'workout':
         return 'Entrenamiento';
+      case 'statistics':
+        return 'Estadísticas';
       case 'history':
         return 'Historial';
       case 'settings':
