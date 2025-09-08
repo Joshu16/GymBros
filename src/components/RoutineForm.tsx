@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Save } from 'lucide-react';
+import { X, Plus, Trash2, Save, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { Routine, WorkoutExercise, Exercise, ExerciseSet, WeightUnit } from '../types';
 import { exercises } from '../data/exercises';
 
@@ -16,6 +16,9 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
     routine?.exercises || []
   );
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
+  const [expandedExercises, setExpandedExercises] = useState<Set<string>>(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const handleAddExercise = (exercise: Exercise) => {
     const newWorkoutExercise: WorkoutExercise = {
@@ -88,6 +91,23 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
         : ex
     ));
   };
+
+  const toggleExerciseExpansion = (exerciseId: string) => {
+    const newExpanded = new Set(expandedExercises);
+    if (newExpanded.has(exerciseId)) {
+      newExpanded.delete(exerciseId);
+    } else {
+      newExpanded.add(exerciseId);
+    }
+    setExpandedExercises(newExpanded);
+  };
+
+  const filteredExercises = exercises.filter(exercise => {
+    const matchesSearch = exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         exercise.muscleGroups.some(mg => mg.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = selectedCategory === 'All' || exercise.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -168,7 +188,22 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
             {routineExercises.map((workoutExercise) => (
               <div key={workoutExercise.id} className="exercise-item">
                 <div className="exercise-header">
-                  <h5>{workoutExercise.exercise.name}</h5>
+                  <div className="exercise-title-section">
+                    <button
+                      className="exercise-toggle-btn"
+                      onClick={() => toggleExerciseExpansion(workoutExercise.id)}
+                    >
+                      {expandedExercises.has(workoutExercise.id) ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
+                    </button>
+                    <h5>{workoutExercise.exercise.name}</h5>
+                    <span className="exercise-sets-count">
+                      {workoutExercise.sets.length} serie{workoutExercise.sets.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
                   <div className="exercise-actions">
                     <select
                       value={workoutExercise.weightUnit}
@@ -186,51 +221,53 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
                   </div>
                 </div>
 
-                <div className="sets-list">
-                  {workoutExercise.sets.map((set, index) => (
-                    <div key={set.id} className="set-item">
-                      <span className="set-number">Set {index + 1}</span>
-                      <input
-                        type="number"
-                        placeholder="Peso"
-                        value={set.weight || ''}
-                        onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
-                      />
-                      <input
-                        type="number"
-                        placeholder="Reps"
-                        value={set.reps || ''}
-                        onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
-                      />
-                      <input
-                        type="number"
-                        placeholder="RIR"
-                        value={set.rir || ''}
-                        onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'rir', parseInt(e.target.value) || 0)}
-                      />
-                      <input
-                        type="text"
-                        placeholder="Notas"
-                        value={set.notes || ''}
-                        onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'notes', e.target.value)}
-                      />
-                      <button
-                        className="btn-icon btn-danger"
-                        onClick={() => handleRemoveSet(workoutExercise.id, set.id)}
-                        disabled={workoutExercise.sets.length === 1}
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                  
-                  <button
-                    className="btn btn-secondary btn-small"
-                    onClick={() => handleAddSet(workoutExercise.id)}
-                  >
-                    <Plus size={14} />
-                    Agregar Serie
-                  </button>
+                <div className={`sets-container ${expandedExercises.has(workoutExercise.id) ? 'expanded' : 'collapsed'}`}>
+                  <div className="sets-list">
+                    {workoutExercise.sets.map((set, index) => (
+                      <div key={set.id} className="set-item">
+                        <span className="set-number">Set {index + 1}</span>
+                        <input
+                          type="number"
+                          placeholder="Peso"
+                          value={set.weight || ''}
+                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
+                        />
+                        <input
+                          type="number"
+                          placeholder="Reps"
+                          value={set.reps || ''}
+                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
+                        />
+                        <input
+                          type="number"
+                          placeholder="RIR"
+                          value={set.rir || ''}
+                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'rir', parseInt(e.target.value) || 0)}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Notas"
+                          value={set.notes || ''}
+                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'notes', e.target.value)}
+                        />
+                        <button
+                          className="btn-icon btn-danger"
+                          onClick={() => handleRemoveSet(workoutExercise.id, set.id)}
+                          disabled={workoutExercise.sets.length === 1}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                    
+                    <button
+                      className="btn btn-secondary btn-small"
+                      onClick={() => handleAddSet(workoutExercise.id)}
+                    >
+                      <Plus size={14} />
+                      Agregar Serie
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -262,23 +299,57 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
             </div>
             
             <div className="modal-content">
-              {Object.entries(groupedExercises).map(([category, categoryExercises]) => (
-                <div key={category} className="exercise-category">
-                  <h4>{category}</h4>
-                  <div className="exercise-list">
-                    {categoryExercises.map((exercise) => (
+              <div className="exercise-search-section">
+                <div className="search-input-container">
+                  <Search size={20} className="search-icon" />
+                  <input
+                    type="text"
+                    placeholder="Buscar ejercicios..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                  />
+                </div>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="category-filter"
+                >
+                  <option value="All">Todas las categorías</option>
+                  {exerciseCategories.map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="exercise-results">
+                {filteredExercises.length === 0 ? (
+                  <div className="no-results">
+                    <p>No se encontraron ejercicios</p>
+                  </div>
+                ) : (
+                  <div className="exercise-grid">
+                    {filteredExercises.map((exercise) => (
                       <button
                         key={exercise.id}
                         className="exercise-option"
                         onClick={() => handleAddExercise(exercise)}
                       >
-                        <span className="exercise-name">{exercise.name}</span>
-                        <span className="exercise-equipment">{exercise.equipment}</span>
+                        <div className="exercise-info">
+                          <span className="exercise-name">{exercise.name}</span>
+                          <span className="exercise-category">{exercise.category}</span>
+                          <span className="exercise-equipment">{exercise.equipment}</span>
+                        </div>
+                        <div className="exercise-muscles">
+                          {exercise.muscleGroups.slice(0, 2).map(muscle => (
+                            <span key={muscle} className="muscle-tag">{muscle}</span>
+                          ))}
+                        </div>
                       </button>
                     ))}
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
             </div>
           </div>
         </div>
