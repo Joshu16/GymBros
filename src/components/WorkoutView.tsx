@@ -30,14 +30,15 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
         // Get previous session data for this exercise
         const lastWorkoutData = getLastWorkoutDataForExercise(ex.exerciseId, routine.id);
         
-        // Clone the sets and populate the first set with previous data if available
+        // Clone the sets and populate ALL sets with previous data if available
         const clonedSets = ex.sets.map((set, index) => {
-          if (index === 0 && lastWorkoutData) {
+          if (lastWorkoutData) {
             return {
               ...set,
               weight: lastWorkoutData.weight,
               reps: lastWorkoutData.reps,
-              rir: lastWorkoutData.rir
+              rir: lastWorkoutData.rir,
+              notes: lastWorkoutData.notes || ''
             };
           }
           return { ...set };
@@ -157,7 +158,7 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
         <div className="workout-info">
           <h2>{routine.name}</h2>
           <div className="workout-progress">
-            <span>Ejercicio {currentExerciseIndex + 1} de {workoutExercises.length}</span>
+            <span>{currentExerciseIndex + 1} de {workoutExercises.length}</span>
             <div className="progress-bar">
               <div 
                 className="progress-fill"
@@ -170,7 +171,7 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
         {!isWorkoutActive ? (
           <button className="btn btn-primary" onClick={startWorkout}>
             <Play size={20} />
-            Comenzar Entrenamiento
+            Comenzar
           </button>
         ) : (
           <div className="workout-controls">
@@ -180,7 +181,7 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
             </button>
             <button className="btn btn-success" onClick={completeWorkout}>
               <Check size={20} />
-              Completar
+              Terminar
             </button>
           </div>
         )}
@@ -194,14 +195,17 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
               onClick={prevExercise}
               disabled={currentExerciseIndex === 0}
             >
-              Anterior
+              ←
             </button>
+            <span className="exercise-counter">
+              {currentExerciseIndex + 1} / {workoutExercises.length}
+            </span>
             <button 
               className="btn btn-secondary"
               onClick={nextExercise}
               disabled={currentExerciseIndex === workoutExercises.length - 1}
             >
-              Siguiente
+              →
             </button>
           </div>
 
@@ -214,10 +218,14 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
                   return lastWorkoutData ? (
                     <div className="previous-session-indicator">
                       <span className="previous-session-text">
-                        Última sesión: {lastWorkoutData.weight}{lastWorkoutData.weightUnit} × {lastWorkoutData.reps} (RIR: {lastWorkoutData.rir})
+                        Última: {lastWorkoutData.weight}{lastWorkoutData.weightUnit} × {lastWorkoutData.reps} (RIR: {lastWorkoutData.rir})
                       </span>
                     </div>
-                  ) : null;
+                  ) : (
+                    <div className="no-previous-session">
+                      <span>Primera vez</span>
+                    </div>
+                  );
                 })()}
                 <select
                   value={currentExercise.weightUnit}
@@ -239,9 +247,15 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
                       <label>Peso ({currentExercise.weightUnit})</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         value={set.weight || ''}
-                        onChange={(e) => updateSet(currentExercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateSet(currentExercise.id, set.id, 'weight', value === '' ? 0 : parseFloat(value) || 0);
+                        }}
                         placeholder="0"
+                        min="0"
+                        step="0.5"
                       />
                     </div>
                     
@@ -249,9 +263,14 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
                       <label>Reps</label>
                       <input
                         type="number"
+                        inputMode="numeric"
                         value={set.reps || ''}
-                        onChange={(e) => updateSet(currentExercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateSet(currentExercise.id, set.id, 'reps', value === '' ? 0 : parseInt(value) || 0);
+                        }}
                         placeholder="0"
+                        min="0"
                       />
                     </div>
                     
@@ -259,19 +278,25 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
                       <label>RIR</label>
                       <input
                         type="number"
+                        inputMode="numeric"
                         value={set.rir || ''}
-                        onChange={(e) => updateSet(currentExercise.id, set.id, 'rir', parseInt(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateSet(currentExercise.id, set.id, 'rir', value === '' ? 0 : parseInt(value) || 0);
+                        }}
                         placeholder="0"
+                        min="0"
+                        max="10"
                       />
                     </div>
                     
-                    <div className="input-group">
+                    <div className="input-group full-width">
                       <label>Notas</label>
                       <input
                         type="text"
                         value={set.notes || ''}
                         onChange={(e) => updateSet(currentExercise.id, set.id, 'notes', e.target.value)}
-                        placeholder="Notas..."
+                        placeholder="Notas de la serie..."
                       />
                     </div>
                   </div>
@@ -287,10 +312,18 @@ const WorkoutView: React.FC<WorkoutViewProps> = ({
               ))}
               
               <button
-                className="btn btn-secondary btn-full"
+                className="btn btn-primary btn-full"
                 onClick={() => addSet(currentExercise.id)}
+                style={{ 
+                  marginTop: '1rem',
+                  padding: '1rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-lg)'
+                }}
               >
-                <Plus size={16} />
+                <Plus size={20} />
                 Agregar Serie
               </button>
             </div>

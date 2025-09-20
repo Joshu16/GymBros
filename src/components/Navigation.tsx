@@ -10,8 +10,6 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, onNavigate }) => {
   const navItems = [
     { id: 'home', label: 'Inicio', icon: Home },
     { id: 'routines', label: 'Rutinas', icon: Dumbbell },
-    { id: 'workout', label: 'Entrenar', icon: Play },
-    { id: 'statistics', label: 'Estadísticas', icon: BarChart3 },
     { id: 'history', label: 'Historial', icon: History },
     { id: 'settings', label: 'Config', icon: Settings },
   ];

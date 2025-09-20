@@ -13,7 +13,7 @@ import StatisticsView from './components/StatisticsView';
 import HistoryView from './components/HistoryView';
 import SettingsView from './components/SettingsView';
 
-type View = 'home' | 'routines' | 'workout' | 'statistics' | 'history' | 'settings';
+type View = 'home' | 'routines' | 'workout' | 'history' | 'settings';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -80,13 +80,6 @@ function App() {
               setSelectedRoutineId(null);
             }}
             defaultWeightUnit={settings.defaultWeightUnit}
-          />
-        );
-      case 'statistics':
-        return (
-          <StatisticsView
-            workouts={workouts}
-            routines={routines}
           />
         );
       case 'history':

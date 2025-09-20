@@ -103,7 +103,8 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
   };
 
   const filteredExercises = exercises.filter(exercise => {
-    const matchesSearch = exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = searchTerm === '' || 
+                         exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          exercise.muscleGroups.some(mg => mg.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === 'All' || exercise.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -141,16 +142,16 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
   }, {} as Record<string, Exercise[]>);
 
   return (
-    <div className="modal-overlay">
-      <div className="modal routine-form">
-        <div className="modal-header">
+    <div className="routine-form-container">
+      <div className="routine-form">
+        <div className="form-header">
           <h3>{routine ? 'Editar Rutina' : 'Nueva Rutina'}</h3>
           <button className="btn-icon" onClick={onCancel}>
             <X size={20} />
           </button>
         </div>
 
-        <div className="modal-content">
+        <div className="form-content">
           <div className="form-group">
             <label htmlFor="routine-name">Nombre de la rutina</label>
             <input
@@ -228,21 +229,38 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
                         <span className="set-number">Set {index + 1}</span>
                         <input
                           type="number"
+                          inputMode="decimal"
                           placeholder="Peso"
                           value={set.weight || ''}
-                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'weight', parseFloat(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            handleSetChange(workoutExercise.id, set.id, 'weight', value === '' ? 0 : parseFloat(value) || 0);
+                          }}
+                          min="0"
+                          step="0.5"
                         />
                         <input
                           type="number"
+                          inputMode="numeric"
                           placeholder="Reps"
                           value={set.reps || ''}
-                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'reps', parseInt(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            handleSetChange(workoutExercise.id, set.id, 'reps', value === '' ? 0 : parseInt(value) || 0);
+                          }}
+                          min="0"
                         />
                         <input
                           type="number"
+                          inputMode="numeric"
                           placeholder="RIR"
                           value={set.rir || ''}
-                          onChange={(e) => handleSetChange(workoutExercise.id, set.id, 'rir', parseInt(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            handleSetChange(workoutExercise.id, set.id, 'rir', value === '' ? 0 : parseInt(value) || 0);
+                          }}
+                          min="0"
+                          max="10"
                         />
                         <input
                           type="text"
@@ -274,7 +292,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
           </div>
         </div>
 
-        <div className="modal-footer">
+        <div className="form-footer">
           <button className="btn btn-secondary" onClick={onCancel}>
             Cancelar
           </button>
@@ -286,9 +304,9 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
       </div>
 
       {showExerciseSelector && (
-        <div className="modal-overlay">
-          <div className="modal exercise-selector">
-            <div className="modal-header">
+        <div className="exercise-selector-overlay">
+          <div className="exercise-selector">
+            <div className="selector-header">
               <h3>Seleccionar Ejercicio</h3>
               <button 
                 className="btn-icon" 
@@ -298,7 +316,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({ routine, onSave, onCancel }) 
               </button>
             </div>
             
-            <div className="modal-content">
+            <div className="selector-content">
               <div className="exercise-search-section">
                 <div className="search-input-container">
                   <Search size={20} className="search-icon" />

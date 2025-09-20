@@ -127,6 +127,16 @@ export const exercises: Exercise[] = [
   { id: 'hip-abduction', name: 'Abductores en Máquina', category: 'Legs', muscleGroups: ['Glutes', 'Hip Abductors'], equipment: 'Machine' },
   { id: 'seated-calf-raises', name: 'Gemelos (Sentado)', category: 'Legs', muscleGroups: ['Calves'], equipment: 'Machine' },
   { id: 'standing-calf-raises', name: 'Gemelos (De Pie)', category: 'Legs', muscleGroups: ['Calves'], equipment: 'Machine' },
+
+  // Additional exercises from user request
+  { id: 'machine-row-high-focus', name: 'Remo en máquina (foco espalda alta)', category: 'Back', muscleGroups: ['Upper Back', 'Rear Delts', 'Traps'], equipment: 'Machine' },
+  { id: 'cable-lateral-raises-pulley', name: 'Elevaciones laterales en polea', category: 'Shoulders', muscleGroups: ['Side Delts'], equipment: 'Cable' },
+  { id: 'scott-curl-unilateral', name: 'Curl de bíceps (Scott unilateral)', category: 'Arms', muscleGroups: ['Biceps'], equipment: 'Dumbbells' },
+  { id: 'jm-press', name: 'JM Press', category: 'Arms', muscleGroups: ['Triceps', 'Shoulders'], equipment: 'Barbell' },
+  { id: 'military-press-dumbbells', name: 'Press militar (mancuernas/máquina)', category: 'Shoulders', muscleGroups: ['Front Delts', 'Shoulders'], equipment: 'Dumbbells' },
+  { id: 'close-grip-pulldown-triangle', name: 'Jalón al pecho (agarre cerrado/triángulo)', category: 'Back', muscleGroups: ['Lats', 'Biceps'], equipment: 'Cable' },
+  { id: 'tricep-rope-extension', name: 'Extensión de tríceps cuerda', category: 'Arms', muscleGroups: ['Triceps'], equipment: 'Cable' },
+  { id: 'pec-deck-machine', name: 'Pec Deck', category: 'Chest', muscleGroups: ['Chest', 'Inner Chest'], equipment: 'Machine' },
 ];
 
 export const exerciseCategories = [

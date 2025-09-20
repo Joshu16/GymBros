@@ -50,87 +50,25 @@ const HomeView: React.FC<HomeViewProps> = ({
 
   return (
     <div className="home-view">
-      {/* Header de bienvenida */}
+      {/* Header minimalista */}
       <div className="welcome-section">
-        <div className="welcome-content">
-          <h1 className="welcome-title">{getGreeting()}</h1>
-          <p className="welcome-subtitle">{getMotivationalMessage()}</p>
-        </div>
-        <div className="welcome-icon">
-          <Dumbbell size={48} />
-        </div>
+        <h1 className="welcome-title">{getGreeting()}</h1>
+        <p className="welcome-subtitle">{getMotivationalMessage()}</p>
       </div>
 
-      {/* Estadísticas rápidas */}
+      {/* Estadísticas simplificadas */}
       <div className="stats-grid">
         <div className="stat-card">
-          <div className="stat-icon">
-            <Target size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>{totalRoutines}</h3>
-            <p>Rutinas</p>
-          </div>
+          <h3>{totalRoutines}</h3>
+          <p>Rutinas</p>
         </div>
-        
         <div className="stat-card">
-          <div className="stat-icon">
-            <Play size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>{totalWorkouts}</h3>
-            <p>Entrenamientos</p>
-          </div>
+          <h3>{totalWorkouts}</h3>
+          <p>Entrenamientos</p>
         </div>
-        
         <div className="stat-card">
-          <div className="stat-icon">
-            <Calendar size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>{thisWeekWorkouts}</h3>
-            <p>Esta semana</p>
-          </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon">
-            <TrendingUp size={24} />
-          </div>
-          <div className="stat-content">
-            <h3>{lastWorkout ? 'Activo' : 'Inactivo'}</h3>
-            <p>Estado</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Acciones rápidas */}
-      <div className="quick-actions">
-        <h2>Acciones rápidas</h2>
-        <div className="action-buttons">
-          <button 
-            className="action-btn primary"
-            onClick={() => onNavigate('routines')}
-          >
-            <Target size={20} />
-            <span>Ver Rutinas</span>
-          </button>
-          
-          <button 
-            className="action-btn secondary"
-            onClick={() => onNavigate('statistics')}
-          >
-            <TrendingUp size={20} />
-            <span>Estadísticas</span>
-          </button>
-          
-          <button 
-            className="action-btn secondary"
-            onClick={() => onNavigate('history')}
-          >
-            <Clock size={20} />
-            <span>Historial</span>
-          </button>
+          <h3>{thisWeekWorkouts}</h3>
+          <p>Esta semana</p>
         </div>
       </div>
 
